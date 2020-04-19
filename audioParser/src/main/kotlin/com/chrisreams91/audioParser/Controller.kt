@@ -1,19 +1,25 @@
 package com.chrisreams91.audioParser
 
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.io.File
 
 
 @RestController
 @RequestMapping
 class Controller(val audioParserService: AudioParserService) {
 
-
   @GetMapping("/")
   fun test(): ResponseEntity<String> {
-    audioParserService.parseAudio()
+    val test = audioParserService.parseAudio()
     return ResponseEntity.ok().body("test")
   }
+
+  @PostMapping("/audio")
+  fun audio(@RequestBody file: File) {
+    audioParserService.parseAudio()
+    ResponseEntity.ok()
+  }
+  
 }
