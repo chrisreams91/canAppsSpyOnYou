@@ -3,6 +3,7 @@ import {StyleSheet, View, Button} from 'react-native';
 import {Buffer} from 'buffer';
 import Sound from 'react-native-sound';
 import AudioRecord from 'react-native-audio-record';
+import RNFetchBlob from 'rn-fetch-blob';
 
 export default class App extends Component {
   sound = null;
@@ -14,8 +15,6 @@ export default class App extends Component {
   };
 
   async componentDidMount() {
-    await this.checkPermission();
-
     const options = {
       sampleRate: 16000,
       bitsPerSample: 16,
@@ -30,20 +29,6 @@ export default class App extends Component {
       // do something with audio chunk
     });
   }
-
-  checkPermission = async () => {
-    const p = true;
-    console.log('permission check', p);
-    if (p === true) {
-      return;
-    }
-    return this.requestPermission();
-  };
-
-  requestPermission = async () => {
-    // const p = await Permissions.request('microphone');
-    console.log('permission request', p);
-  };
 
   start = () => {
     console.log('start record');
@@ -106,6 +91,31 @@ export default class App extends Component {
     this.setState({paused: true});
   };
 
+  upload = async () => {
+    if (!this.state.loaded) {
+      try {
+        await this.load();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    console.log('upload', this.state.audioFile);
+
+    const {
+      respInfo: {status},
+    } = await RNFetchBlob.fetch(
+      'POST',
+      'http://localhost:8080/',
+      {
+        'Content-Type': 'application/octet-stream',
+      },
+      RNFetchBlob.wrap(this.state.audioFile),
+    );
+
+    console.log('status: ', status);
+  };
+
   render() {
     const {recording, paused, audioFile} = this.state;
     return (
@@ -120,7 +130,7 @@ export default class App extends Component {
           )}
         </View>
         <View style={{margin: 50}}>
-          <Button onPress={() => null} title="upload" disabled={!audioFile} />
+          <Button onPress={this.upload} title="upload" disabled={!audioFile} />
         </View>
       </View>
     );
