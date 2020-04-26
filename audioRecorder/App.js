@@ -101,16 +101,21 @@ export default class App extends Component {
     }
 
     console.log('upload', this.state.audioFile);
-
     const {
       respInfo: {status},
     } = await RNFetchBlob.fetch(
       'POST',
       'http://localhost:8080/',
       {
-        'Content-Type': 'application/octet-stream',
+        'Content-Type': 'multipart/form-data',
       },
-      RNFetchBlob.wrap(this.state.audioFile),
+      [
+        {
+          name: 'audio',
+          filename: 'test.wav',
+          data: RNFetchBlob.wrap(this.state.audioFile),
+        },
+      ],
     );
 
     console.log('status: ', status);
