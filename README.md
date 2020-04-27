@@ -28,3 +28,11 @@ tar xvf audio-0.7.0.tar.gz
 ### Transcribe an audio file
 
 deepspeech --model deepspeech-0.7.0-models.pbmm --scorer deepspeech-0.7.0-models.scorer --audio audio/2830-3980-0043.wav
+
+# TODO
+
+Associate words to some sort of product:
+something similar to https://www.merchantwords.com/ ?
+
+Set up in memory database or way to track most popular words:
+H2 ?
