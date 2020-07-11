@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: V-1
+      author: AudioParser
+      changes:
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_number
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: agent_id
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: authority
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: carrier_name
+                  type: varchar(255)
+              - column:
+                  name: shipper
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: consignee
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: consignee_email
+                  type: varchar(255)
+              - column:
+                  name: estimate_number
+                  type: varchar(255)
+              - column:
+                  name: stops
+                  type: jsonb

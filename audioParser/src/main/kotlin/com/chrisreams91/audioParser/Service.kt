@@ -1,16 +1,19 @@
 package com.chrisreams91.audioParser
 
+import com.chrisreams91.audioParser.model.Audio
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.time.Instant
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
 @Service
-class Service {
+class Service(private val repository: Repository) {
 
   private val projectRootDirectory = System.getProperty("user.dir")
 
@@ -20,7 +23,7 @@ class Service {
     return path
   }
 
-  fun parseAudio(file: MultipartFile): List<String> {
+  fun parseAudio(file: MultipartFile) {
     val words = mutableListOf<String>()
     val filePath = saveAudioFile(file)
 
@@ -47,7 +50,9 @@ class Service {
         }
     }
 
-    return words
+    val audio = Audio(words = words, timestamp = Date.from(Instant.now()))
+
+    repository.save(audio)
   }
 
 
