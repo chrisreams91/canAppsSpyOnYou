@@ -8,9 +8,9 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "words")
+@Table(name = "audio_recording")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType::class)
-data class Audio(
+data class AudioRecording(
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,5 +20,8 @@ data class Audio(
   @Column(columnDefinition = "jsonb")
   private val words: List<String> = emptyList(),
 
-  private val creation_time: Date = Date.from(Instant.now())
+  private val creation_time: Date = Date.from(Instant.now()),
+
+  private val user_id: String? = null
+
 )
