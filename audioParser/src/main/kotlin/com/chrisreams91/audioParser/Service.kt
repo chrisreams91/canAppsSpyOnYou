@@ -50,7 +50,7 @@ class Service(private val repository: Repository) {
         }
     }
 
-    val audio = Audio(words = words, timestamp = Date.from(Instant.now()))
+    val audio = Audio(words = words, creation_time = Date.from(Instant.now()))
 
     repository.save(audio)
   }
