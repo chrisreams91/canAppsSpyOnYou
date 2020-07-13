@@ -1,6 +1,7 @@
-package com.chrisreams91.audioParser
+package com.chrisreams91.audioParser.service
 
-import com.chrisreams91.audioParser.model.Audio
+import com.chrisreams91.audioParser.Repository
+import com.chrisreams91.audioParser.model.AudioRecording
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
@@ -18,7 +19,7 @@ class Service(private val repository: Repository) {
   private val projectRootDirectory = System.getProperty("user.dir")
 
   fun saveAudioFile(file: MultipartFile): Path {
-    val path = Paths.get("${projectRootDirectory}/src/main/kotlin/com/chrisreams91/audioParser/Audio/temp.wav")
+    val path = Paths.get("${projectRootDirectory}/temp-audio.wav")
     Files.write(path, file.bytes)
     return path
   }
@@ -50,12 +51,7 @@ class Service(private val repository: Repository) {
         }
     }
 
-    val audio = Audio(words = words, creation_time = Date.from(Instant.now()))
-
+    val audio = AudioRecording(words = words, creation_time = Date.from(Instant.now()))
     repository.save(audio)
   }
-
-
-
-
 }
