@@ -108,6 +108,7 @@ export default class App extends Component {
       'http://localhost:8080/',
       {
         'Content-Type': 'multipart/form-data',
+        userId: 'Chris',
       },
       [
         {

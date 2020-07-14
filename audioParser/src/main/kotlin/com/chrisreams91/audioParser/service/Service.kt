@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 
 
 @Service
-class Service(private val repository: Repository) {
+class Service(private val repository: Repository, private val header: Header) {
 
   private val projectRootDirectory = System.getProperty("user.dir")
 
@@ -51,7 +51,8 @@ class Service(private val repository: Repository) {
         }
     }
 
-    val audio = AudioRecording(words = words, creation_time = Date.from(Instant.now()))
+    val userId = header.getUserId()
+    val audio = AudioRecording(words = words, creation_time = Date.from(Instant.now()), user_id = userId)
     repository.save(audio)
   }
 }
