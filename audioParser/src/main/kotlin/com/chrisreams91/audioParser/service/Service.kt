@@ -1,6 +1,6 @@
 package com.chrisreams91.audioParser.service
 
-import com.chrisreams91.audioParser.model.AudioRecording
+import com.chrisreams91.audioParser.model.Audio
 import com.chrisreams91.audioParser.model.Word
 import com.chrisreams91.audioParser.repository.AudioRecordingRepository
 import com.chrisreams91.audioParser.repository.WordRepository
@@ -35,13 +35,18 @@ class Service(private val deepSpeech: DeepSpeech,
     val words = deepSpeech.transcribe(filePath)
 
     val userId = header.getUserId()
-    val audio = AudioRecording(words = words, creation_time = Date.from(Instant.now()), user_id = userId)
+
+    val builtWords = words.map { Word(word = it, user_id = userId) }
+    val audio = Audio(words = builtWords, creation_time = Date.from(Instant.now()), user_id = userId)
 
     audioRecordingRepository.save(audio)
-    words.forEach {
-      val word = Word(word = it, user_id = userId)
-      wordRepository.save(word)
-    }
+//    builtWords.forEach {
+//      wordRepository.save(it)
+//    }
+//    words.forEach {
+//      val word = Word(word = it, user_id = userId)
+//      wordRepository.save(word)
+//    }
   }
 
 }

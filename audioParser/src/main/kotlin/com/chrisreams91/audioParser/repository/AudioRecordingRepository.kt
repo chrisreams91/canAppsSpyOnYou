@@ -1,8 +1,9 @@
 package com.chrisreams91.audioParser.repository
 
-import com.chrisreams91.audioParser.model.AudioRecording
+import com.chrisreams91.audioParser.model.Audio
 import org.springframework.data.repository.CrudRepository
+import org.springframework.stereotype.Repository
 
-
-interface AudioRecordingRepository : CrudRepository<AudioRecording, Long> {
+@Repository
+interface AudioRecordingRepository : CrudRepository<Audio, Long> {
 }

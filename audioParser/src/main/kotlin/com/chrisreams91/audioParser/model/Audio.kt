@@ -8,20 +8,21 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "audio_recording")
+@Table(name = "audios")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType::class)
-data class AudioRecording(
+data class Audio(
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  val id : Long = 0,
+  val id: Long = 0,
 
+  @OneToMany(mappedBy = "audio", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
   @Type(type = "jsonb")
   @Column(columnDefinition = "jsonb")
-  private val words: List<String> = emptyList(),
+  private val words: List<Word> = emptyList(),
 
-  private val creation_time: Date = Date.from(Instant.now()),
+  private val user_id: String? = "",
 
-  private val user_id: String? = null
-
+  // format this better
+  private val creation_time: Date = Date.from(Instant.now())
 )
