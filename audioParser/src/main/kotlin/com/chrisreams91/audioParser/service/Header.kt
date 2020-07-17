@@ -7,7 +7,13 @@ import javax.servlet.http.HttpServletRequest
 class Header(private val httpServletRequest: HttpServletRequest) {
 
 
-  fun getUserId(): String { return httpServletRequest.getHeader(userId) }
+  fun getUserId(): String {
+    return try {
+      httpServletRequest.getHeader(userId)
+    } catch (exception: Exception) {
+      return "aint got no username header"
+    }
+  }
 
 
   companion object {
