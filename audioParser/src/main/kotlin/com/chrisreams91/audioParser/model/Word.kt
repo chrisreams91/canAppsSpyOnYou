@@ -7,9 +7,13 @@ import javax.persistence.*
 data class Word(
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  val id : Long = 0,
+  val id: Long = 0,
 
-  private val word: String,
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "audio_id", nullable = false)
+  var audio: Audio? = null,
 
-  private val user_id: String
+  private val word: String = "",
+
+  private val user_id: String = ""
 )

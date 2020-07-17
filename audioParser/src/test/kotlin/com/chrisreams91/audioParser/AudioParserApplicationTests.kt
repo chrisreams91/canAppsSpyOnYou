@@ -4,10 +4,10 @@ import org.junit.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class AudioRecordingParserApplicationTests {
+class AudioParserApplicationTests {
 
-	@Test
-	fun contextLoads() {
-	}
+  @Test
+  fun contextLoads() {
+  }
 
 }
