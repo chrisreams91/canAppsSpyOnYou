@@ -14,7 +14,9 @@ import java.util.concurrent.TimeUnit
 
 
 @Service
-class Service(private val repository: Repository, private val header: Header) {
+class Service(private val deepSpeech: DeepSpeech,
+              private val repository: Repository,
+              private val header: Header) {
 
   private val projectRootDirectory = System.getProperty("user.dir")
 
@@ -25,34 +27,14 @@ class Service(private val repository: Repository, private val header: Header) {
   }
 
   fun parseAudio(file: MultipartFile) {
-    val words = mutableListOf<String>()
+    // passing in path here every time because may rename file based on who sent to prevent over lap
     val filePath = saveAudioFile(file)
 
-    val processBuilders = mutableListOf(
-      ProcessBuilder("deepspeech", "--model", "deepspeech-0.7.0-models.pbmm", "--audio", filePath.toString())
-        .directory(File("/Users/tcxr3")),
-      ProcessBuilder("cat")
-    )
-
-    val processes: List<Process> = ProcessBuilder.startPipeline(processBuilders)
-    val first = processes.first()
-    val last = processes.last()
-
-    first.waitFor(10, TimeUnit.SECONDS)
-    last.waitFor(10, TimeUnit.SECONDS)
-
-    last.inputStream.reader(Charsets.UTF_8).use {
-      it
-        .readText()
-        .replace("\n", "")
-        .split(" ")
-        .forEach { word ->
-          words.add(word)
-        }
-    }
+    val words = deepSpeech.transcribe(filePath)
 
     val userId = header.getUserId()
     val audio = AudioRecording(words = words, creation_time = Date.from(Instant.now()), user_id = userId)
     repository.save(audio)
   }
+
 }
