@@ -1,22 +1,24 @@
 package com.chrisreams91.audioParser.service
 
-import com.chrisreams91.audioParser.Repository
 import com.chrisreams91.audioParser.model.AudioRecording
+import com.chrisreams91.audioParser.model.Word
+import com.chrisreams91.audioParser.repository.AudioRecordingRepository
+import com.chrisreams91.audioParser.repository.WordRepository
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.Instant
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 @Service
 class Service(private val deepSpeech: DeepSpeech,
-              private val repository: Repository,
-              private val header: Header) {
+              private val header: Header,
+              private val audioRecordingRepository: AudioRecordingRepository,
+              private val wordRepository: WordRepository
+) {
 
   private val projectRootDirectory = System.getProperty("user.dir")
 
@@ -34,7 +36,12 @@ class Service(private val deepSpeech: DeepSpeech,
 
     val userId = header.getUserId()
     val audio = AudioRecording(words = words, creation_time = Date.from(Instant.now()), user_id = userId)
-    repository.save(audio)
+
+    audioRecordingRepository.save(audio)
+    words.forEach {
+      val word = Word(word = it, user_id = userId)
+      wordRepository.save(word)
+    }
   }
 
 }

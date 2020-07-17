@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping
-class Controller(val audioParserService: Service,val deepSpeech: DeepSpeech) {
+class Controller(val audioParserService: Service, val deepSpeech: DeepSpeech) {
 
   @GetMapping("/")
   fun test(): ResponseEntity<String> {
@@ -16,10 +16,10 @@ class Controller(val audioParserService: Service,val deepSpeech: DeepSpeech) {
     return ResponseEntity.ok().body("test")
   }
 
-  @PostMapping("/")
+  @PostMapping("/audioRecording")
   fun audio(@RequestParam(value = "audio") audioFile: MultipartFile) {
     audioParserService.parseAudio(audioFile)
     ResponseEntity.ok()
   }
-  
+
 }

@@ -105,7 +105,7 @@ export default class App extends Component {
       respInfo: {status},
     } = await RNFetchBlob.fetch(
       'POST',
-      'http://localhost:8080/',
+      'http://localhost:8080/audioRecording',
       {
         'Content-Type': 'multipart/form-data',
         'user-id': 'Chris',
