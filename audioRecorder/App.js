@@ -1,9 +1,24 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Button} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Button,
+  Text,
+  FlatList,
+  SafeAreaView,
+} from 'react-native';
 import {Buffer} from 'buffer';
 import Sound from 'react-native-sound';
 import AudioRecord from 'react-native-audio-record';
 import RNFetchBlob from 'rn-fetch-blob';
+
+const createFakeDataz = (range) => {
+  const data = [];
+  for (let num = 1; num < range; num++) {
+    data.push({id: num, name: `Data number ${num}`});
+  }
+  return data;
+};
 
 export default class App extends Component {
   sound = null;
@@ -12,6 +27,7 @@ export default class App extends Component {
     recording: false,
     loaded: false,
     paused: true,
+    data: createFakeDataz(2000),
   };
 
   async componentDidMount() {
@@ -100,7 +116,6 @@ export default class App extends Component {
       }
     }
 
-    console.log('upload', this.state.audioFile);
     const {
       respInfo: {status},
     } = await RNFetchBlob.fetch(
@@ -125,19 +140,37 @@ export default class App extends Component {
   render() {
     const {recording, paused, audioFile} = this.state;
     return (
-      <View style={styles.container}>
-        <View style={styles.row}>
-          <Button onPress={this.start} title="Record" disabled={recording} />
-          <Button onPress={this.stop} title="Stop" disabled={!recording} />
-          {paused ? (
-            <Button onPress={this.play} title="Play" disabled={!audioFile} />
-          ) : (
-            <Button onPress={this.pause} title="Pause" disabled={!audioFile} />
+      <View style={{flex: 1}}>
+        <View style={{marginTop: 60, marginBottom: 10}}>
+          <View style={styles.row}>
+            <Button onPress={this.start} title="Record" disabled={recording} />
+            <Button onPress={this.stop} title="Stop" disabled={!recording} />
+            {paused ? (
+              <Button onPress={this.play} title="Play" disabled={!audioFile} />
+            ) : (
+              <Button
+                onPress={this.pause}
+                title="Pause"
+                disabled={!audioFile}
+              />
+            )}
+            <Button
+              onPress={this.upload}
+              title="upload"
+              disabled={!audioFile}
+            />
+          </View>
+        </View>
+        <FlatList
+          contentContainerStyle={styles.flatList}
+          data={this.state.data}
+          keyExtractor={(item) => item.id}
+          renderItem={({item}) => (
+            <View>
+              <Text style={{margin: 20}}>{item.name}</Text>
+            </View>
           )}
-        </View>
-        <View style={{margin: 50}}>
-          <Button onPress={this.upload} title="upload" disabled={!audioFile} />
-        </View>
+        />
       </View>
     );
   }
@@ -147,9 +180,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor: 'green',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+  },
+  flatList: {
+    backgroundColor: 'red',
+    margin: 15,
+    marginTop: 30,
   },
 });
