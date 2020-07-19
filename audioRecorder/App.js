@@ -21,6 +21,7 @@ export default class App extends Component {
     loaded: false,
     paused: true,
     data: [],
+    advertisement: 'Advertisement Here',
   };
 
   async componentDidMount() {
@@ -56,7 +57,6 @@ export default class App extends Component {
       ...fact,
       id: this.uuidv4(),
     }));
-    console.log('fired: ', facts.length);
     this.setState({data: [...this.state.data, ...facts]});
   };
 
@@ -156,7 +156,7 @@ export default class App extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.audioContainer}>
-          <View style={styles.row}>
+          <View style={styles.audioButtons}>
             <Button onPress={this.start} title="Record" disabled={recording} />
             <Button onPress={this.stop} title="Stop" disabled={!recording} />
             {paused ? (
@@ -187,6 +187,9 @@ export default class App extends Component {
           onEndReached={() => this.fetchData(20)}
           onEndReachedThreshold={0.5}
         />
+        <View style={styles.advertisementContainer}>
+          <Text>{this.state.advertisement}</Text>
+        </View>
       </SafeAreaView>
     );
   }
@@ -197,7 +200,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   audioContainer: {marginTop: 40, marginBottom: 10},
-  row: {
+  audioButtons: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
@@ -207,5 +210,11 @@ const styles = StyleSheet.create({
   },
   flatListItem: {
     margin: 20,
+  },
+  advertisementContainer: {
+    backgroundColor: '#c4c3c0',
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
