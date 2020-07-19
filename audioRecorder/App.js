@@ -11,14 +11,7 @@ import {Buffer} from 'buffer';
 import Sound from 'react-native-sound';
 import AudioRecord from 'react-native-audio-record';
 import RNFetchBlob from 'rn-fetch-blob';
-
-const createFakeDataz = (range) => {
-  const data = [];
-  for (let num = 1; num < range; num++) {
-    data.push({id: num, name: `Data number ${num}`});
-  }
-  return data;
-};
+import axios from 'axios';
 
 export default class App extends Component {
   sound = null;
@@ -27,10 +20,11 @@ export default class App extends Component {
     recording: false,
     loaded: false,
     paused: true,
-    data: createFakeDataz(2000),
+    data: [],
   };
 
   async componentDidMount() {
+    await this.fetchData(40);
     const options = {
       sampleRate: 16000,
       bitsPerSample: 16,
@@ -38,13 +32,33 @@ export default class App extends Component {
     };
 
     AudioRecord.init(options);
-
     AudioRecord.on('data', (data) => {
       const chunk = Buffer.from(data, 'base64');
       console.log('chunk size', chunk.byteLength);
-      // do something with audio chunk
     });
   }
+
+  uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (
+      c,
+    ) {
+      var r = (Math.random() * 16) | 0,
+        v = c == 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+
+  fetchData = async (count) => {
+    const response = await axios.get(
+      `https://catfact.ninja/facts?limit=${count}`,
+    );
+    const facts = response.data.data.map((fact) => ({
+      ...fact,
+      id: this.uuidv4(),
+    }));
+    console.log('fired: ', facts.length);
+    this.setState({data: [...this.state.data, ...facts]});
+  };
 
   start = () => {
     console.log('start record');
@@ -140,8 +154,8 @@ export default class App extends Component {
   render() {
     const {recording, paused, audioFile} = this.state;
     return (
-      <View style={{flex: 1}}>
-        <View style={{marginTop: 60, marginBottom: 10}}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.audioContainer}>
           <View style={styles.row}>
             <Button onPress={this.start} title="Record" disabled={recording} />
             <Button onPress={this.stop} title="Stop" disabled={!recording} />
@@ -167,11 +181,13 @@ export default class App extends Component {
           keyExtractor={(item) => item.id}
           renderItem={({item}) => (
             <View>
-              <Text style={{margin: 20}}>{item.name}</Text>
+              <Text style={styles.flatListItem}>{item.fact}</Text>
             </View>
           )}
+          onEndReached={() => this.fetchData(20)}
+          onEndReachedThreshold={0.5}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -179,16 +195,17 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'green',
   },
+  audioContainer: {marginTop: 40, marginBottom: 10},
   row: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
   flatList: {
-    backgroundColor: 'red',
     margin: 15,
     marginTop: 30,
+  },
+  flatListItem: {
+    margin: 20,
   },
 });
