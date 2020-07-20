@@ -12,6 +12,7 @@ import Sound from 'react-native-sound';
 import AudioRecord from 'react-native-audio-record';
 import RNFetchBlob from 'rn-fetch-blob';
 import axios from 'axios';
+import {getUserId, uuidv4} from './utils';
 
 export default class App extends Component {
   sound = null;
@@ -21,7 +22,7 @@ export default class App extends Component {
     loaded: false,
     paused: true,
     data: [],
-    advertisement: 'Advertisement Here',
+    lastWordsParsed: '',
   };
 
   async componentDidMount() {
@@ -39,23 +40,13 @@ export default class App extends Component {
     });
   }
 
-  uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (
-      c,
-    ) {
-      var r = (Math.random() * 16) | 0,
-        v = c == 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  }
-
   fetchData = async (count) => {
     const response = await axios.get(
       `https://catfact.ninja/facts?limit=${count}`,
     );
     const facts = response.data.data.map((fact) => ({
       ...fact,
-      id: this.uuidv4(),
+      id: uuidv4(),
     }));
     this.setState({data: [...this.state.data, ...facts]});
   };
@@ -129,15 +120,13 @@ export default class App extends Component {
         console.log(error);
       }
     }
-
-    const {
-      respInfo: {status},
-    } = await RNFetchBlob.fetch(
+    const userId = await getUserId();
+    const response = await RNFetchBlob.fetch(
       'POST',
       'http://localhost:8080/audioRecording',
       {
         'Content-Type': 'multipart/form-data',
-        'user-id': 'Chris',
+        'user-id': userId,
       },
       [
         {
@@ -147,8 +136,6 @@ export default class App extends Component {
         },
       ],
     );
-
-    console.log('status: ', status);
   };
 
   render() {
@@ -188,7 +175,7 @@ export default class App extends Component {
           onEndReachedThreshold={0.5}
         />
         <View style={styles.advertisementContainer}>
-          <Text>{this.state.advertisement}</Text>
+          <Text>{this.state.lastWordsParsed}</Text>
         </View>
       </SafeAreaView>
     );

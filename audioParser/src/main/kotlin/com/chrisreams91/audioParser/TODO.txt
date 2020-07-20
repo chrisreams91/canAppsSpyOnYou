@@ -1,8 +1,0 @@
-Codify the setup of the deepspeech env so for deployment
-
-
-filter out useless words
-
-
-best way to store words? should i keep the event of a recording as well as a count of the words by user?
-

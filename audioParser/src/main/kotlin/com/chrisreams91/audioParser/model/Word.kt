@@ -1,5 +1,7 @@
 package com.chrisreams91.audioParser.model
 
+import java.time.Instant
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -7,13 +9,13 @@ import javax.persistence.*
 data class Word(
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  val id: Long = 0,
-
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "audio_id", nullable = false)
-  var audio: Audio? = null,
+  var id: Long = 0,
 
   private val word: String = "",
 
-  private val user_id: String = ""
+  private val user_id: String = "",
+
+  private val audio_recording_id: String,
+
+  private val creation_time: Date = Date.from(Instant.now())
 )
