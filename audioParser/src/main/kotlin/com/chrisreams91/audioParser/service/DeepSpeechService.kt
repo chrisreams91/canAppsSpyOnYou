@@ -6,8 +6,7 @@ import java.nio.file.Path
 import java.util.concurrent.TimeUnit
 
 @Service
-class DeepSpeech {
-
+class DeepSpeechService {
 
 
   fun createAndActivateVirtualEnv() {
@@ -15,7 +14,7 @@ class DeepSpeech {
     val activateEnv = ProcessBuilder("source", "\$HOME/tmp/deepspeech-venv/bin/activate")
 
     createEnv.start().inputStream.reader(Charsets.UTF_8).use {
-        println(it.readText())
+      println(it.readText())
     }
 
     activateEnv.start().inputStream.reader(Charsets.UTF_8).use {

@@ -11,8 +11,9 @@ import java.util.*
 
 
 @Service
-class Service(private val deepSpeech: DeepSpeech,
-              private val header: Header,
+class Service(private val deepSpeechService: DeepSpeechService,
+              private val headerService: HeaderService,
+              private val wordService: WordService,
               private val wordRepository: WordRepository) {
 
   private val projectRootDirectory = System.getProperty("user.dir")
@@ -27,13 +28,16 @@ class Service(private val deepSpeech: DeepSpeech,
     // passing in path here every time because may rename file based on who sent to prevent over lap
     val filePath = saveAudioFile(file)
 
-    val words = deepSpeech.transcribe(filePath)
-    val userId = header.getUserId()
+    val words = deepSpeechService.transcribe(filePath)
+    val userId = headerService.getUserId()
     val audioRecordingId = UUID.randomUUID().toString()
 
+
     words.map {
-      val word = Word(word = it, user_id = userId, audio_recording_id = audioRecordingId)
-      wordRepository.save(word)
+      if (wordService.isValidWord(it)) {
+        val word = Word(word = it, user_id = userId, audio_recording_id = audioRecordingId)
+        wordRepository.save(word)
+      }
     }
     return words
   }

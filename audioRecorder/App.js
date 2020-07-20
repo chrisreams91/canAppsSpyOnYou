@@ -27,13 +27,13 @@ export default class App extends Component {
 
   async componentDidMount() {
     await this.fetchData(40);
-    const options = {
+    const audioOptions = {
       sampleRate: 16000,
       bitsPerSample: 16,
       wavFile: 'test.wav',
     };
 
-    AudioRecord.init(options);
+    AudioRecord.init(audioOptions);
     AudioRecord.on('data', (data) => {
       const chunk = Buffer.from(data, 'base64');
       console.log('chunk size', chunk.byteLength);
@@ -44,11 +44,11 @@ export default class App extends Component {
     const response = await axios.get(
       `https://catfact.ninja/facts?limit=${count}`,
     );
-    const facts = response.data.data.map((fact) => ({
+    const catFacts = response.data.data.map((fact) => ({
       ...fact,
       id: uuidv4(),
     }));
-    this.setState({data: [...this.state.data, ...facts]});
+    this.setState({data: [...this.state.data, ...catFacts]});
   };
 
   start = () => {

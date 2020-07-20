@@ -1,6 +1,6 @@
-package com.chrisreams91.audioParser
+package com.chrisreams91.audioParser.controller
 
-import com.chrisreams91.audioParser.service.DeepSpeech
+import com.chrisreams91.audioParser.service.DeepSpeechService
 import com.chrisreams91.audioParser.service.Service
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -8,11 +8,11 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping
-class Controller(val audioParserService: Service, val deepSpeech: DeepSpeech) {
+class Controller(val audioParserService: Service, val deepSpeechService: DeepSpeechService) {
 
   @GetMapping("/")
   fun test(): ResponseEntity<String> {
-    deepSpeech.createAndActivateVirtualEnv()
+//    deepSpeech.createAndActivateVirtualEnv()
     return ResponseEntity.ok().body("test")
   }
 

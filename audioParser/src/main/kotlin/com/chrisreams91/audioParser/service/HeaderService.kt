@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 import javax.servlet.http.HttpServletRequest
 
 @Component
-class Header(private val httpServletRequest: HttpServletRequest) {
+class HeaderService(private val httpServletRequest: HttpServletRequest) {
 
 
   fun getUserId(): String {

@@ -6,7 +6,7 @@ The goal of this repo is to create a set of applications that can record audio f
 
 App:
 
-display in app what words were just parse in toast or somthing
+display in app what words were just parsed in toast or somthing
 convert everything to hooks / general code cleanup
 
 backend:
