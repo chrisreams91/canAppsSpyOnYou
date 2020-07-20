@@ -18,8 +18,8 @@ class Controller(val audioParserService: Service, val deepSpeech: DeepSpeech) {
 
   @PostMapping("/audioRecording")
   fun audio(@RequestParam(value = "audio") audioFile: MultipartFile) {
-    audioParserService.parseAudio(audioFile)
-    ResponseEntity.ok()
+    val words = audioParserService.parseAudio(audioFile)
+    ResponseEntity.ok(words)
   }
 
 }
