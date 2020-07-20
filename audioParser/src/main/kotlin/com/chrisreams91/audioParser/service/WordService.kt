@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service
 class WordService {
 
   fun isValidWord(word: String): Boolean {
-    println(word)
 
+    // add more robust validation of words
     return word.length > 2
   }
 }

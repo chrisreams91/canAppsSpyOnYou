@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface WordRepository : CrudRepository<Word, Long> {
+
+  fun findByUserId(userId: String): List<Word>
+  
 }

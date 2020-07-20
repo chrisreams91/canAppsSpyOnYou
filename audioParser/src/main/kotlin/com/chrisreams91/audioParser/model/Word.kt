@@ -13,9 +13,9 @@ data class Word(
 
   private val word: String = "",
 
-  private val user_id: String = "",
+  private val userId: String = "",
 
-  private val audio_recording_id: String,
+  private val audioRecordingId: String = "",
 
-  private val creation_time: Date = Date.from(Instant.now())
+  private val creationTime: Date = Date.from(Instant.now())
 )

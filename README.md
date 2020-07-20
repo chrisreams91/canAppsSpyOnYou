@@ -8,12 +8,10 @@ App:
 
 display in app what words were just parsed in toast or somthing
 convert everything to hooks / general code cleanup
+pass in user id headers for gets
 
 backend:
 
-Associate words to some sort of product:
-something similar to https://www.merchantwords.com/ ?
-
-Codify the setup of the deepspeech env for deployment
-
+Associate words to some sort of product - something similar to https://www.merchantwords.com/ ?
 filter out useless words
+Codify the setup of the deepspeech env for deployment

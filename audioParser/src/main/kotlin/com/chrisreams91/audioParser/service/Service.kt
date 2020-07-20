@@ -32,13 +32,19 @@ class Service(private val deepSpeechService: DeepSpeechService,
     val userId = headerService.getUserId()
     val audioRecordingId = UUID.randomUUID().toString()
 
-
     words.map {
       if (wordService.isValidWord(it)) {
-        val word = Word(word = it, user_id = userId, audio_recording_id = audioRecordingId)
+        val word = Word(word = it, userId = userId, audioRecordingId = audioRecordingId)
         wordRepository.save(word)
       }
     }
+
     return words
+  }
+
+  fun getUsersWords() {
+    val userId = headerService.getUserId()
+    val words = wordRepository.findByUserId(userId)
+    println(words)
   }
 }
