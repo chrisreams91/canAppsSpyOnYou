@@ -1,7 +1,8 @@
 package com.chrisreams91.audioParser.controller
 
+import com.chrisreams91.audioParser.model.Word
 import com.chrisreams91.audioParser.service.Service
-import org.springframework.http.ResponseEntity
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
@@ -10,15 +11,14 @@ import org.springframework.web.multipart.MultipartFile
 class Controller(val audioParserService: Service) {
 
   @GetMapping("/words")
-  fun test(): ResponseEntity<String> {
-    val words = audioParserService.getUsersWords()
-    return ResponseEntity.ok().body("test")
+  fun test(): List<Word> {
+    return audioParserService.getUsersWords()
   }
 
   @PostMapping("/audioRecording")
-  fun audio(@RequestParam(value = "audio") audioFile: MultipartFile) {
-    val words = audioParserService.parseAudio(audioFile)
-    ResponseEntity.ok(words)
+  @ResponseStatus(value = HttpStatus.CREATED)
+  fun audio(@RequestParam(required = false) audio: MultipartFile): List<String> {
+    return audioParserService.parseAudio(audio)
   }
 
 }

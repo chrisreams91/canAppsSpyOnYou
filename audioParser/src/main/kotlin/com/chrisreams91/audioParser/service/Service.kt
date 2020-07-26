@@ -42,9 +42,10 @@ class Service(private val deepSpeechService: DeepSpeechService,
     return words
   }
 
-  fun getUsersWords() {
+  fun getUsersWords(): List<Word> {
     val userId = headerService.getUserId()
     val words = wordRepository.findByUserId(userId)
     println(words)
+    return words
   }
 }

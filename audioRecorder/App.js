@@ -10,7 +10,6 @@ import {
 import {Buffer} from 'buffer';
 import Sound from 'react-native-sound';
 import AudioRecord from 'react-native-audio-record';
-import RNFetchBlob from 'rn-fetch-blob';
 import axios from 'axios';
 import {getUserId, uuidv4} from './utils';
 
@@ -22,7 +21,7 @@ export default class App extends Component {
     loaded: false,
     paused: true,
     data: [],
-    lastWordsParsed: '',
+    lastWordsParsed: [],
   };
 
   async componentDidMount() {
@@ -113,29 +112,26 @@ export default class App extends Component {
   };
 
   upload = async () => {
-    if (!this.state.loaded) {
-      try {
-        await this.load();
-      } catch (error) {
-        console.log(error);
-      }
-    }
     const userId = await getUserId();
-    const response = await RNFetchBlob.fetch(
-      'POST',
-      'http://localhost:8080/audioRecording',
-      {
-        'Content-Type': 'multipart/form-data',
-        'user-id': userId,
-      },
-      [
-        {
-          name: 'audio',
-          filename: 'test.wav',
-          data: RNFetchBlob.wrap(this.state.audioFile),
+    const file = {name: 'audio', uri: this.state.audioFile};
+
+    const formData = new FormData();
+    formData.append('audio', file);
+
+    axios
+      .post('http://localhost:8080/audioRecording', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'user-id': userId,
         },
-      ],
-    );
+      })
+      .then(({data}) => {
+        console.log('words returned: ', data);
+        this.setState({lastWordsParsed: data});
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   render() {
@@ -175,7 +171,9 @@ export default class App extends Component {
           onEndReachedThreshold={0.5}
         />
         <View style={styles.advertisementContainer}>
-          <Text>{this.state.lastWordsParsed}</Text>
+          <Text style={styles.advertisementContainerText}>
+            {this.state.lastWordsParsed.join(' ') || 'parsed words here'}
+          </Text>
         </View>
       </SafeAreaView>
     );
@@ -203,5 +201,8 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  advertisementContainerText: {
+    fontSize: 18,
   },
 });
